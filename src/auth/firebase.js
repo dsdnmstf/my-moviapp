@@ -1,16 +1,24 @@
 // Import the functions you need from the SDKs you need
+import { async } from "@firebase/util";
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-// Your web app's Firebase configuration
+
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyCal9DUrA9xmUgO1-VSzIqgzo2S3zKtFVE",
-  authDomain: "my-movieapp-a4df0.firebaseapp.com",
-  projectId: "my-movieapp-a4df0",
-  storageBucket: "my-movieapp-a4df0.appspot.com",
-  messagingSenderId: "135859614681",
-  appId: "1:135859614681:web:88a17315d607f8b5465fc8",
+  apiKey: process.env.REACT_APP_MOVIE_apiKey,
+  authDomain: process.env.REACT_APP_FIREBASE_authDomain,
+  projectId: process.env.REACT_APP_FIREBASE_projectId,
+  storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
+  appId: process.env.REACT_APP_FIREBASE_appId,
 };
 
 // Initialize Firebase
@@ -26,4 +34,36 @@ export const userStateChecker = (setCurrentUser) => {
       setCurrentUser(false);
     }
   });
+};
+
+export const signUpWithGoogle = () => {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+export const logOut = () => {
+  signOut(auth);
+};
+
+export const createUser = async (email, password, displayName) => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(auth.currentUser, { displayName: displayName });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const signIn = async (email, password) => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    console.log(error);
+  }
 };

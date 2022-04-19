@@ -1,9 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Container, Nav, Navbar, Button } from "react-bootstrap";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { logOut } from "../auth/firebase";
 
 const MyNavbar = () => {
   const navigate = useNavigate();
-  const currentUser = true;
+  const { currentUser } = useContext(AuthContext);
   return (
     <Navbar className="navbar" variant="dark" expand="sm">
       <Container fluid>
@@ -16,7 +19,7 @@ const MyNavbar = () => {
             <div className="buttons align-items-center">
               {currentUser ? (
                 <h5 className="mb-0 text-light text-capitalize">
-                  {currentUser.displayName}
+                  {currentUser?.displayName}
                 </h5>
               ) : (
                 <Button
@@ -32,6 +35,7 @@ const MyNavbar = () => {
                   variant="outline-light"
                   className="ms-2"
                   onClick={() => {
+                    logOut();
                     navigate("/");
                   }}
                 >
