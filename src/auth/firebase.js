@@ -1,19 +1,17 @@
-// Import the functions you need from the SDKs you need
-import { async } from "@firebase/util";
 import { initializeApp } from "firebase/app";
-
 import {
-  createUserWithEmailAndPassword,
   getAuth,
-  GoogleAuthProvider,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithPopup,
   signOut,
+  createUserWithEmailAndPassword,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
+
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_MOVIE_apiKey,
+  apiKey: process.env.REACT_APP_FIREBASE_apiKey,
   authDomain: process.env.REACT_APP_FIREBASE_authDomain,
   projectId: process.env.REACT_APP_FIREBASE_projectId,
   storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
@@ -21,11 +19,12 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_appId,
 };
 
-// Initialize Firebase
+//! Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+//!Initialize Firebase Authentication and get auth info
 const auth = getAuth(app);
-console.log(auth);
+
 export const userStateChecker = (setCurrentUser) => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -35,22 +34,25 @@ export const userStateChecker = (setCurrentUser) => {
     }
   });
 };
-
+//! Sign Up with Google Provider
 export const signUpWithGoogle = () => {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
   signInWithPopup(auth, provider)
-    .then((result) => {
-      console.log(result);
+    .then((res) => {
+      console.log(res);
     })
     .catch((error) => {
       console.log(error);
     });
 };
+
+//!Logout
 export const logOut = () => {
   signOut(auth);
 };
 
+//! Creating New User (Register)
 export const createUser = async (email, password, displayName) => {
   try {
     await createUserWithEmailAndPassword(auth, email, password);
@@ -60,6 +62,7 @@ export const createUser = async (email, password, displayName) => {
   }
 };
 
+//!Sign in with email and password
 export const signIn = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);

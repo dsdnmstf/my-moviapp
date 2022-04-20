@@ -15,8 +15,11 @@ const Login = () => {
   }, []);
   const handleGoogleSingIn = () => {
     signUpWithGoogle();
-    navigate("/");
   };
+  useEffect(() => {
+    currentUser && navigate("/");
+  }, [currentUser]);
+
   const handleLogin = () => {
     signIn(email, password);
     currentUser ? navigate("/") : alert("Login is Failed");
